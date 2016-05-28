@@ -40,8 +40,8 @@ Open your app build.gradle and add the dependency as follows:
 *Example code:*
 ## 
     
-    import com.hod.api.hodclient.HODClient;
-    import com.hod.api.hodclient.IHODClientCallback;
+    import hod.api.hodclient.HODClient;
+    import hod.api.hodclient.IHODClientCallback;
 
     public class MyActivity extends Activity implements IHODClientCallback 
     {
