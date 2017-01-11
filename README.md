@@ -689,6 +689,8 @@ public class MyActivity extends Activity implements IHODClientCallback {
         // handle error if any
     }
 }
+```
+
 ----
 ## Standard response parser functions
 
