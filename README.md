@@ -72,7 +72,7 @@ Sends a HTTP GET request to call a Haven OnDemand API.
 ```
 void GetRequest(Map<String,Object> params, String hodApp, Boolean async)
 ```
-
+*Parameter:*
 * `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
 
 Note: In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
@@ -115,16 +115,13 @@ hodClient.GetRequest(params, hodApp, false);
 ```
 
 **Function PostRequest**
+
+Sends a HTTP POST request to call a Haven OnDemand API.
 ```
 void PostRequest(Map<String,Object> params, String hodApp, Boolean async)
 ```
 
-*Description:* 
-
-* Sends a HTTP POST request to call a Haven OnDemand API.
-
 *Parameters:*
-
 * `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API. 
 
 *Note:* In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
@@ -164,16 +161,13 @@ hodClient.PostRequest(params, hodApp, true);
 ```
 
 **Function GetJobResult**
+
+Sends a request to Haven OnDemand to retrieve content identified by the jobID.
 ```
 void GetJobResult(String jobID)
 ```
 
-*Description:*
-
-* Sends a request to Haven OnDemand to retrieve content identified by the jobID.
-
 *Parameter:*
-
 * `jobID` is the job ID returned from a Haven OnDemand API upon an asynchronous call.
 
 *Response:*
@@ -198,13 +192,11 @@ public void requestCompletedWithJobID(String response)
 ```
 
 **Function GetJobStatus**
+
+Sends a request to Haven OnDemand to retrieve status of a job identified by a job ID. If the job is completed, the response will be the result of that job. Otherwise, the response will contain the current status of the job.
 ```
 void GetJobStatus(String jobID)
 ```
-
-*Description:*
-
-* Sends a request to Haven OnDemand to retrieve status of a job identified by a job ID. If the job is completed, the response will be the result of that job. Otherwise, the response will contain the current status of the job.
 
 *Parameter:*
 
@@ -251,65 +243,60 @@ public void onErrorOccurred(string errorMessage){}
 
 When you call the GetRequest() or PostRequest() with the ASYNC mode, the response will be returned to this callback function. The response is a JSON string containing the jobID.
 
-    @Override
-    public void requestCompletedWithJobID(String response) 
-    {
+```
+@Override
+public void requestCompletedWithJobID(String response) 
+{
     
-    }
-
+}
+```
 
 When you call the GetRequest() or PostRequest() with the SYNC mode or call the GetJobResult() or GwtJobStatus() function, the response will be returned to this callback function. The response is a JSON string containing the actual result of the service.
 
-    @Override
-    public void requestCompletedWithContent(String response) 
-    {
+```
+@Override
+public void requestCompletedWithContent(String response) 
+{
     
-    }
-
+}
+```
 
 If there is an error occurred, the error message will be returned to this callback function.
 
-    @Override
-    public void onErrorOccurred(string errorMessage)
-    {
+```
+@Override
+public void onErrorOccurred(string errorMessage)
+{
     
-    }
-
+}
+```
 
 ## HODResponseParser API References
 **Constructor**
 
-    HODResponseParser()
-
-*Description:* 
-
-* Constructor. Creates and initializes an HODResponseParser object.
-
-*Parameters:*
-
-* None
+Creates and initializes an HODResponseParser object.
+```
+HODResponseParser()
+```
 
 *Example code:*
-## 
-    
-    import hod.response.parser.HODErrorCode;
-    import hod.response.parser.HODErrorObject;
-    import hod.response.parser.HODResponseParser;
+``` 
+import hod.response.parser.HODErrorCode;
+import hod.response.parser.HODErrorObject;
+import hod.response.parser.HODResponseParser;
 
-    public class MyActivity extends Activity 
-    {
-        HODResponseParser hodParser = new HODResponseParser();
-        
-    }
+public class MyActivity extends Activity 
+{
+    HODResponseParser hodParser = new HODResponseParser();
+}
 
-----
+
 **Function ParseJobID**
 
-    String ParseJobID(String response)
-
-*Description:*
- 
-* Parses a jobID from a json string returned from an asynchronous API call.
+Parses a jobID from a json string returned from an asynchronous API call.
+```
+String ParseJobID(String response)
+```
 
 *Parameters:*
 
