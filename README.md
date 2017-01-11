@@ -1,8 +1,6 @@
-# HavenOndemand Library for Android. V2.1
+# Android client library for Haven OnDemand
 
-----
-## Overview
-HavenOndemand library for Android is a lightweight Java based API, which helps you easily access over 60 APIs from HPE HavenOnDemand platform.
+Official Android client library to help with calling [Haven OnDemand APIs](http://havenondemand.com).
 
 The library contains 2 packages:
 
@@ -10,16 +8,30 @@ HODClient package for sending HTTP GET/POST requests to HavenOnDemand APIs.
 
 HODResponseParser package for parsing JSON responses from HavenOnDemand APIs.
 
-HODClient library requires a minimum Android API level 10.
+HODClient library supports minimum Android API level 10.
 
+## What is Haven OnDemand?
+Haven OnDemand is a set of over 70 APIs for handling all sorts of unstructured data. Here are just some of our APIs' capabilities:
+* Speech to text
+* OCR
+* Text extraction
+* Indexing documents
+* Smart search
+* Language identification
+* Concept extraction
+* Sentiment analysis
+* Web crawlers
+* Machine learning
+
+For a full list of all the APIs and to try them out, check out https://www.havenondemand.com/developer/apis
 ----
 ## Integrate HavenOnDemand into an Android project
 Open your app build.gradle and add the dependency as follows:
 
     dependencies {
         // add hodclient and hodresponseparser dependencies
-        compile 'com.havenondemand:hodclient:2.1'
-        compile 'com.havenondemand:hodresponseparser:2.1'
+        compile 'com.havenondemand:hodclient:2.2'
+        compile 'com.havenondemand:hodresponseparser:2.2'
     }
 
 ----
@@ -30,38 +42,36 @@ Open your app build.gradle and add the dependency as follows:
 
 *Description:* 
 
-* Constructor. Creates and initializes an HODClient object.
+* Creates and initializes an HODClient object.
 
 *Parameters:*
 
-* apiKey: your developer apikey.
-* callback: class that implements the IHODClientCallback interface.
+* `apiKey`: your developer apikey.
+* `callback`: class that implements the IHODClientCallback interface.
 
 *Example code:*
-## 
+```
+import com.hod.api.hodclient.HODClient;
+import com.hod.api.hodclient.IHODClientCallback;
+
+public class MyActivity extends Activity implements IHODClientCallback 
+{
+    HODClient hodClient = new HODClient("your-api-key", this);
     
-    import com.hod.api.hodclient.HODClient;
-    import com.hod.api.hodclient.IHODClientCallback;
-
-    public class MyActivity extends Activity implements IHODClientCallback 
-    {
-        HODClient hodClient = new HODClient("your-api-key", this);
+    @Override
+    public void requestCompletedWithJobID(String response){ }
         
-	    @Override
-        public void requestCompletedWithJobID(String response){ }
-        
-	    @Override
-        public void requestCompletedWithContent(String response){ }
-    	
-        @Override
-        public void onErrorOccurred(String errorMessage){ }
-    }
+    @Override
+    public void requestCompletedWithContent(String response){ }
+    
+    @Override
+    public void onErrorOccurred(String errorMessage){ }
+}
+```
 
-
-----
 **Function GetRequest**
 
-    void GetRequest(Map<String,Object> params, String hodApp, REQ_MODE mode)
+    void GetRequest(Map<String,Object> params, String hodApp, Boolean async)
 
 *Description:*
  
@@ -69,50 +79,51 @@ Open your app build.gradle and add the dependency as follows:
 
 *Parameters:*
 
-* params: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
+* `params`: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
 
->Note: 
+*Note:* In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
 
->In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
->E.g.:
-## 
-    Map<String, Object> params = new HashMap<String, Object>();
-    List<String> urls = new ArrayList<String>();
-    urls.add("http://www.cnn.com");
-    urls.add("http://www.bbc.com");
-    params.put("url", urls);
-    params.put("unique_entities", "true");
-    List<String> entities = new ArrayList<String>();
-    entities.add("people_eng");
-    entities.add("places_eng");
-    params.put("entity_type", entities);
-    
-* hodApp: a string to identify a Haven OnDemand API. E.g. "extractentities". Current supported apps are listed in the HODApps class.
-* mode [REQ_MODE.SYNC | REQ_MODE.ASYNC]: specifies API call as Asynchronous or Synchronous.
+E.g.:
+```android
+Map<String, Object> params = new HashMap<String, Object>();
+List<String> urls = new ArrayList<String>();
+urls.add("http://www.cnn.com");
+urls.add("http://www.bbc.com");
+params.put("url", urls);
+params.put("unique_entities", "true");
+List<String> entities = new ArrayList<String>();
+entities.add("people_eng");
+entities.add("places_eng");
+params.put("entity_type", entities);
+```
+
+* `hodApp`: a string to identify a Haven OnDemand API. E.g. "extractentities". Current supported apps are listed in the HODApps class.
+* `async`: specifies API call as Asynchronous or Synchronous.
 
 *Response:*
 
-* If the mode is "ASYNC", response will be returned via the requestCompletedWithJobID(String response) callback function.
-* If the mode is "SYNC", response will be returned via the requestCompletedWithContent(String response) callback function.
+* If async is true, response will be returned via the requestCompletedWithJobID(String response) callback function.
+* If async is false, response will be returned via the requestCompletedWithContent(String response) callback function.
 * If there is an error occurred, the error message will be sent via the onErrorOccurred(String errorMessage) callback function.
 
 *Example code:*
-## 
-    // Call the Entity Extraction API to find people and places from CNN website
+``` 
+// Call the Entity Extraction API to find people and places from CNN website
 
-    String hodApp = HODApps.ENTITY_EXTRACTION;
-    Map<String,Object> params =  new HashMap<String,Object>();
-    params.put("url", "http://www.cnn.com");
-    List<String> entities = new ArrayList<String>();
-    entities.add("people_eng");
-    entities.add("places_eng");
-    params.put("entity_type", entities);
-    hodClient.GetRequest(params, hodApp, HODClient.REQ_MODE.SYNC);
+String hodApp = HODApps.ENTITY_EXTRACTION;
+Map<String,Object> params =  new HashMap<String,Object>();
+params.put("url", "http://www.cnn.com");
+List<String> entities = new ArrayList<String>();
+entities.add("people_eng");
+entities.add("places_eng");
+params.put("entity_type", entities);
+hodClient.GetRequest(params, hodApp, false);
+```
 
-----
 **Function PostRequest**
-
-    void PostRequest(Map<String,Object> params, String hodApp, REQ_MODE mode)
+```
+void PostRequest(Map<String,Object> params, String hodApp, Boolean async)
+```
 
 *Description:* 
 
@@ -120,47 +131,48 @@ Open your app build.gradle and add the dependency as follows:
 
 *Parameters:*
 
-* params: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API. 
+* `params`: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API. 
 
->Note: 
+*Note:* In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
 
->In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
->E.g.:
-## 
-    Map<String, Object> params = new HashMap<String, Object>();
-    List<String> urls = new ArrayList<String>();
-    urls.add("http://www.cnn.com");
-    urls.add("http://www.bbc.com");
-    params.put("url", urls);
-    params.put("unique_entities", "true");
-    List<String> entities = new ArrayList<String>();
-    entities.add("people_eng");
-    entities.add("places_eng");
-    params.put("entity_type", entities);
+E.g.:
+``` 
+Map<String, Object> params = new HashMap<String, Object>();
+List<String> urls = new ArrayList<String>();
+urls.add("http://www.cnn.com");
+urls.add("http://www.bbc.com");
+params.put("url", urls);
+params.put("unique_entities", "true");
+List<String> entities = new ArrayList<String>();
+entities.add("people_eng");
+entities.add("places_eng");
+params.put("entity_type", entities);
+```
 
-* hodApp: a string to identify a Haven OnDemand API. E.g. "ocrdocument". Current supported apps are listed in the IODApps class.
-* mode [REQ_MODE.SYNC | REQ_MODE.ASYNC]: specifies API call as Asynchronous or Synchronous.
+* `hodApp`: a string to identify a Haven OnDemand API. E.g. "ocrdocument". Current supported apps are listed in the IODApps class.
+* `async`: specifies API call as Asynchronous or Synchronous.
 
 *Response:*
 
-* If the mode is "ASYNC", response will be returned via the requestCompletedWithJobID(String response) callback function.
-* If the mode is "SYNC", response will be returned via the requestCompletedWithContent(String response) callback function.
+* If async is true, response will be returned via the requestCompletedWithJobID(String response) callback function.
+* If async is false, response will be returned via the requestCompletedWithContent(String response) callback function.
 * If there is an error occurred, the error message will be sent via the onErrorOccurred(String errorMessage) callback function.
 
 *Example code:*
-## 
-    // Call the OCR Document API to scan text from an image file
+```android 
+// Call the OCR Document API to scan text from an image file
 
-    String hodApp = HODApps.OCR_DOCUMENT;
-    Map<String,Object> params =  new HashMap<String,Object>();
-    params.put("file", "full/path/filename.jpg");
-    params.put("mode", "document_photo");
-    hodClient.PostRequest(params, hodApp, HODClient.REQ_MODE.ASYNC);
+String hodApp = HODApps.OCR_DOCUMENT;
+Map<String,Object> params =  new HashMap<String,Object>();
+params.put("file", "full/path/filename.jpg");
+params.put("mode", "document_photo");
+hodClient.PostRequest(params, hodApp, true);
+```
 
-----
 **Function GetJobResult**
-
-    void GetJobResult(String jobID)
+```
+void GetJobResult(String jobID)
+```
 
 *Description:*
 
@@ -168,32 +180,33 @@ Open your app build.gradle and add the dependency as follows:
 
 *Parameter:*
 
-* jobID: the job ID returned from a Haven OnDemand API upon an asynchronous call.
+* `jobID`: the job ID returned from a Haven OnDemand API upon an asynchronous call.
 
 *Response:*
  
 * Response will be returned via the requestCompletedWithContent(String response)
 
 *Example code:*
-## 
-    // Parse a JSON string contained a jobID and call the function to get the actual content from Haven OnDemand server
+```android
+// Parse a JSON string contained a jobID and call the function to get the actual content from Haven OnDemand server
 
-    @Override
-    public void requestCompletedWithJobID(String response) 
-    { 
-        try {
-            JSONObject mainObject = new JSONObject(response);
-            if (!mainObject.isNull("jobID")) {
-                jobID = mainObject.getString("jobID");
-                hodClient.GetJobResult(jobID);
-            }
-        } catch (Exception ex) { }
-    }
+@Override
+public void requestCompletedWithJobID(String response) 
+{ 
+    try {
+        JSONObject mainObject = new JSONObject(response);
+        if (!mainObject.isNull("jobID")) {
+            jobID = mainObject.getString("jobID");
+            hodClient.GetJobResult(jobID);
+        }
+    } catch (Exception ex) { }
+}
+```
 
-----
 **Function GetJobStatus**
-
-    void GetJobStatus(String jobID)
+```
+void GetJobStatus(String jobID)
+```
 
 *Description:*
 
@@ -201,45 +214,47 @@ Open your app build.gradle and add the dependency as follows:
 
 *Parameter:*
 
-* jobID: the job ID returned from a Haven OnDemand API upon an asynchronous call.
+* `jobID` is the job ID returned from a Haven OnDemand API upon an asynchronous call.
 
 *Response:*
  
 * Response will be returned via the requestCompletedWithContent(String response)
 
 *Example code:*
-## 
-    // Parse a JSON string contained a jobID and call the function to get the actual content from Haven OnDemand server
+```
+// Parse a JSON string contained a jobID and call the function to get the actual content from Haven OnDemand server
 
-    @Override
-    public void requestCompletedWithJobID(String response) 
-    { 
-        try {
-            JSONObject mainObject = new JSONObject(response);
-            if (!mainObject.isNull("jobID")) {
-                jobID = mainObject.getString("jobID");
-                hodClient.GetJobStatus(jobID);
-            }
-        } catch (Exception ex) { }
-    }
+@Override
+public void requestCompletedWithJobID(String response) 
+{ 
+    try {
+        JSONObject mainObject = new JSONObject(response);
+        if (!mainObject.isNull("jobID")) {
+            jobID = mainObject.getString("jobID");
+            hodClient.GetJobStatus(jobID);
+        }
+    } catch (Exception ex) { }
+}
+```
 
 ----
 ## API callback functions
 In your class, you will need to inherit the IHODClientCallback interface and implement callback functions to receive responses from the server
+```android
+public class MyClass implements IHODClientCallback {
 
-    public class MyClass implements IHODClientCallback {
+@Override
+public void requestCompletedWithJobID(String response) {}
     
-        @Override
-        public void requestCompletedWithJobID(String response) {}
+@Override
+public void requestCompletedWithContent(String response) {}
     
-        @Override
-        public void requestCompletedWithContent(String response) {}
+@Override
+public void onErrorOccurred(string errorMessage){}
     
-        @Override
-        public void onErrorOccurred(string errorMessage){}
-    
-    }
-# 
+}
+```
+
 When you call the GetRequest() or PostRequest() with the ASYNC mode, the response will be returned to this callback function. The response is a JSON string containing the jobID.
 
     @Override
@@ -247,7 +262,8 @@ When you call the GetRequest() or PostRequest() with the ASYNC mode, the respons
     {
     
     }
-# 
+
+
 When you call the GetRequest() or PostRequest() with the SYNC mode or call the GetJobResult() or GwtJobStatus() function, the response will be returned to this callback function. The response is a JSON string containing the actual result of the service.
 
     @Override
@@ -255,7 +271,8 @@ When you call the GetRequest() or PostRequest() with the SYNC mode or call the G
     {
     
     }
-# 
+
+
 If there is an error occurred, the error message will be returned to this callback function.
 
     @Override
@@ -264,7 +281,7 @@ If there is an error occurred, the error message will be returned to this callba
     
     }
 
-----
+
 ## HODResponseParser API References
 **Constructor**
 
@@ -627,7 +644,7 @@ for (HODErrorObject err : errors) {
             params.put("file", "path/and/filename");
             params.put("mode", "document_photo");
 
-            hodClient.PostRequest(params, hodApp, HODClient.REQ_MODE.ASYNC);
+            hodClient.PostRequest(params, hodApp, true);
         }
         
         // implement delegated functions
