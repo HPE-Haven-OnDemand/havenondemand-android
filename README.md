@@ -24,7 +24,8 @@ Haven OnDemand is a set of over 70 APIs for handling all sorts of unstructured d
 * Machine learning
 
 For a full list of all the APIs and to try them out, check out https://www.havenondemand.com/developer/apis
-----
+
+
 ## Integrate HavenOnDemand into an Android project
 Open your app build.gradle and add the dependency as follows:
 
@@ -34,20 +35,15 @@ Open your app build.gradle and add the dependency as follows:
         compile 'com.havenondemand:hodresponseparser:2.2'
     }
 
-----
 ## HODClient API References
 **Constructor**
+Creates and initializes an HODClient object.
+```
+HODClient(String apiKey, IHODClientCallback callback)
+```
 
-    HODClient(String apiKey, IHODClientCallback callback)
-
-*Description:* 
-
-* Creates and initializes an HODClient object.
-
-*Parameters:*
-
-* `apiKey`: your developer apikey.
-* `callback`: class that implements the IHODClientCallback interface.
+* `apiKey` your developer apikey.
+* `callback` class that implements the IHODClientCallback interface.
 
 *Example code:*
 ```
@@ -79,9 +75,9 @@ public class MyActivity extends Activity implements IHODClientCallback
 
 *Parameters:*
 
-* `params`: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
+* `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
 
-*Note:* In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
+Note: In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
 
 E.g.:
 ```android
@@ -97,8 +93,8 @@ entities.add("places_eng");
 params.put("entity_type", entities);
 ```
 
-* `hodApp`: a string to identify a Haven OnDemand API. E.g. "extractentities". Current supported apps are listed in the HODApps class.
-* `async`: specifies API call as Asynchronous or Synchronous.
+* `hodApp` a string to identify a Haven OnDemand API. E.g. "extractentities". Current supported apps are listed in the HODApps class.
+* `async` specifies API call as Asynchronous or Synchronous.
 
 *Response:*
 
@@ -131,7 +127,7 @@ void PostRequest(Map<String,Object> params, String hodApp, Boolean async)
 
 *Parameters:*
 
-* `params`: a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API. 
+* `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API. 
 
 *Note:* In the case of a parameter type is an array<>, the value must be defined as a List\<String\> object.
 
@@ -149,8 +145,8 @@ entities.add("places_eng");
 params.put("entity_type", entities);
 ```
 
-* `hodApp`: a string to identify a Haven OnDemand API. E.g. "ocrdocument". Current supported apps are listed in the IODApps class.
-* `async`: specifies API call as Asynchronous or Synchronous.
+* `hodApp` a string to identify a Haven OnDemand API. E.g. "ocrdocument". Current supported apps are listed in the IODApps class.
+* `async` specifies API call as Asynchronous or Synchronous.
 
 *Response:*
 
@@ -180,7 +176,7 @@ void GetJobResult(String jobID)
 
 *Parameter:*
 
-* `jobID`: the job ID returned from a Haven OnDemand API upon an asynchronous call.
+* `jobID` is the job ID returned from a Haven OnDemand API upon an asynchronous call.
 
 *Response:*
  
