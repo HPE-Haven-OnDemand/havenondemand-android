@@ -37,6 +37,7 @@ Open your app build.gradle and add the dependency as follows:
 
 ## HODClient API References
 **Constructor**
+
 Creates and initializes an HODClient object.
 ```
 HODClient(String apiKey, IHODClientCallback callback)
@@ -67,13 +68,10 @@ public class MyActivity extends Activity implements IHODClientCallback
 
 **Function GetRequest**
 
-    void GetRequest(Map<String,Object> params, String hodApp, Boolean async)
-
-*Description:*
- 
-* Sends a HTTP GET request to call a Haven OnDemand API.
-
-*Parameters:*
+Sends a HTTP GET request to call a Haven OnDemand API.
+```
+void GetRequest(Map<String,Object> params, String hodApp, Boolean async)
+```
 
 * `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand API, where the keys are the parameters of that API.
 
