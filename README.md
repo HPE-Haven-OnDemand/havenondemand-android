@@ -172,7 +172,7 @@ GetRequestCombination(Map<String,Object> params, String hodApp, Boolean async)
 
 *Example code:*
 ``` 
-// Call a combination named "ocrtoconcept", which recognizes text from an image and extract the concept of the text.
+// Call a combination API named "ocrtoconcept", which recognizes text from an image and extract the concept of the text.
 params.put("url", "http://www.some.domain/review.jpg");
 params.put("languages", "en");
 hodClient.GetRequestCombination(params, "ocrtoconcept", false);
@@ -190,10 +190,10 @@ PostRequestCombination(Map<String,Object> params, String hodApp, Boolean async)
 
 *Example code:*
 ``` 
-// Call a combination named "imagetosentiment", which recognizes text from an image and analyze the sentiment of the text.
+// Call a combination API named "imagetosentiment", which recognizes text from an image and analyze the sentiment of the text.
 Map<String,Object> params =  new HashMap<>();
 Map<String,String> file = new HashMap<>();
-file.put("imageFile", "Image/FullPath/AndName/image.jpg");
+file.put("imageFile", "FullPath/AndName/image.jpg");
 params.put("file", file);
 hodClient.PostRequestCombination(params, "imagetosentiment", true);
 ```
@@ -691,6 +691,7 @@ public class MyActivity extends Activity implements IHODClientCallback {
 }
 ----
 ## Standard response parser functions
+
 ```
 ParseSpeechRecognitionResponse(String jsonStr)
 ParseCancelConnectorScheduleResponse(String jsonStr)
@@ -750,6 +751,7 @@ ParseRestoreTextIndexResponse(String jsonStr)
 ```
 ----
 ## Supported standard response classes
+
 ```
 SpeechRecognitionResponse
 CancelConnectorScheduleResponse
