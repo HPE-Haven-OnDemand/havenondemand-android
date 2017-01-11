@@ -326,6 +326,14 @@ public class HODResponseParser {
         }
         return obj;
     }
+    public PredictV2Response ParsePredictV2Response(String jsonStr) {
+        PredictV2Response obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, PredictV2Response.class);
+        }
+        return obj;
+    }
     public RecommendResponse ParseRecommendResponse(String jsonStr) {
         RecommendResponse obj = null;
         String result = getResult(jsonStr);
@@ -334,11 +342,43 @@ public class HODResponseParser {
         }
         return obj;
     }
+    public RecommendV2Response ParseRecommendV2Response(String jsonStr) {
+        RecommendV2Response obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, RecommendV2Response.class);
+        }
+        return obj;
+    }
     public TrainPredictionResponse ParseTrainPredictionResponse(String jsonStr) {
         TrainPredictionResponse obj = null;
         String result = getResult(jsonStr);
         if (result != null) {
             obj = gsonObj.fromJson(result, TrainPredictionResponse.class);
+        }
+        return obj;
+    }
+    public TrainPredictionV2Response ParseTrainPredictionV2Response(String jsonStr) {
+        TrainPredictionV2Response obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, TrainPredictionV2Response.class);
+        }
+        return obj;
+    }
+    public GetPredictionModelDetailsResponse ParseGetPredictionModelDetailsResponse(String jsonStr) {
+        GetPredictionModelDetailsResponse obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, GetPredictionModelDetailsResponse.class);
+        }
+        return obj;
+    }
+    public DeletePredictionModelResponse ParseDeletePredictionModelResponse(String jsonStr) {
+        DeletePredictionModelResponse obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, DeletePredictionModelResponse.class);
         }
         return obj;
     }
@@ -398,6 +438,22 @@ public class HODResponseParser {
         }
         return obj;
     }
+    public EntityExtractionResponse ParseEntityExtractionResponse(String jsonStr) {
+        EntityExtractionResponse obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, EntityExtractionResponse.class);
+        }
+        return obj;
+    }
+    public EntityExtractionV2Response ParseEntityExtractionV2Response(String jsonStr) {
+        EntityExtractionV2Response obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, EntityExtractionV2Response.class);
+        }
+        return obj;
+    }
     public ExpandTermsResponse ParseExpandTermsResponse(String jsonStr) {
         ExpandTermsResponse obj = null;
         String result = getResult(jsonStr);
@@ -427,6 +483,14 @@ public class HODResponseParser {
         String result = getResult(jsonStr);
         if (result != null) {
             obj = gsonObj.fromJson(result, SentimentAnalysisResponse.class);
+        }
+        return obj;
+    }
+    public SentimentAnalysisV2Response ParseSentimentAnalysisV2Response(String jsonStr) {
+        SentimentAnalysisV2Response obj = null;
+        String result = getResult(jsonStr);
+        if (result != null) {
+            obj = gsonObj.fromJson(result, SentimentAnalysisV2Response.class);
         }
         return obj;
     }
@@ -517,15 +581,17 @@ public class HODResponseParser {
         if (jsonStr.length() == 0) {
             HODErrorObject error = new HODErrorObject();
             error.error = HODErrorCode.INVALID_HOD_RESPONSE;
-            error.reason = "Invalid response";
+            error.reason = "Empty response";
             this.AddError(error);
             return obj;
         }
         try {
             JSONObject mainObject = new JSONObject(jsonStr);
+            //JSONObject actions = null;
             if (!mainObject.isNull("actions"))
             {
                 JSONObject actions = mainObject.getJSONArray("actions").getJSONObject(0);
+                String action = actions.getString("action");
                 String status = actions.getString("status");
                 if (status.equals("finished"))
                     result = actions.getJSONObject("result").toString();
@@ -546,21 +612,22 @@ public class HODResponseParser {
                     HODErrorObject error = new HODErrorObject();
                     error.error = HODErrorCode.QUEUED;
                     error.reason = "Task is in queue.";
-                    error.jobID = mainObject.getString("jobID");
+                    error.jobID = actions.getString("jobID");
                     this.AddError(error);
                     return null;
                 } else if (status.equals("in progress")) {
                     HODErrorObject error = new HODErrorObject();
                     error.error = HODErrorCode.IN_PROGRESS;
                     error.reason = "Task is in progress.";
-                    error.jobID = mainObject.getString("jobID");
+                    error.jobID = actions.getString("jobID");
                     this.AddError(error);
                     return null;
-                } else {
+                }
+                else {
                     HODErrorObject error = new HODErrorObject();
                     error.error = HODErrorCode.UNKNOWN_ERROR;
                     error.reason = "Unknown error";
-                    error.jobID = mainObject.getString("jobID");
+                    error.jobID = actions.getString("jobID");
                     this.AddError(error);
                     return null;
                 }

@@ -3,6 +3,7 @@ package hod.response.parser;
 /**
  * Created by vanphongvu on 1/5/16.
  */
+/*
 public class SupportedApps {
     public final static String RECOGNIZE_SPEECH = "recognizespeech";
 
@@ -35,16 +36,6 @@ public class SupportedApps {
     public final static String SUGGEST_LINKS = "suggestlinks";
     public final static String SUMMARIZE_GRAPH = "summarizegraph";
 
-    /*
-    public final static String CREATE_CLASSIFICATION_OBJECTS = "createclassificationobjects";
-    public final static String CREATE_POLICY_OBJECTS = "createpolicyobjects";
-    public final static String DELETE_CLASSIFICATION_OBJECTS = "deleteclassificationobjects";
-    public final static String DELETE_POLICY_OBJECTS = "deletepolicyobjects";
-    public final static String RETRIEVE_CLASSIFICATION_OBJECTS = "retrieveclassificationobjects";
-    public final static String RETRIEVE_POLICY_OBJECTS = "retrievepolicyobjects";
-    public final static String UPDATE_CLASSIFICATION_OBJECTS = "updateclassificationobjects";
-    public final static String UPDATE_POLICY_OBJECTS = "updatepolicyobjects";
-    */
 
     public final static String PREDICT = "predict";
     public final static String RECOMMEND = "recommend";
@@ -56,13 +47,7 @@ public class SupportedApps {
     public final static String UPDATE_QUERY_PROFILE = "updatequeryprofile";
 
     public final static String FIND_RELATED_CONCEPTS = "findrelatedconcepts";
-    /*
-    public final static String FIND_SIMILAR = "findsimilar";
-    public final static String GET_CONTENT = "getcontent";
-    public final static String GET_PARAMETRIC_VALUES = "getparametricvalues";
-    public final static String QUERY_TEXT_INDEX = "querytextindex";
-    public final static String RETRIEVE_INDEX_FIELDS = "retrieveindexfields";
-    */
+
 
     public final static String AUTO_COMPLETE = "autocomplete";
     //public final static String CLASSIFY_DOCUMENT = "classifydocument";
@@ -85,3 +70,4 @@ public class SupportedApps {
     public final static String RESTORE_TEXT_INDEX = "restoretextindex";
 
 }
+*/

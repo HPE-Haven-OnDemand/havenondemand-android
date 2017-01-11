@@ -5,6 +5,8 @@ package hod.api.hodclient;
  */
 public class HODApps {
     public final static String RECOGNIZE_SPEECH = "recognizespeech";
+    public final static String DETECT_SCENE_CHANGES = "detectscenechanges";
+    public final static String RECOGNIZE_LICENSE_PLATES = "recognizelicenseplates";
 
     public final static String CANCEL_CONNECTOR_SCHEDULE = "cancelconnectorschedule";
     public final static String CONNECTOR_HISTORY = "connectorhistory";
@@ -20,6 +22,8 @@ public class HODApps {
     public final static String STORE_OBJECT = "storeobject";
     public final static String EXTRACT_TEXT = "extracttext";
     public final static String VIEW_DOCUMENT = "viewdocument";
+
+    public final static String MAP_COORDINATES = "mapcoordinates";
 
     public final static String OCR_DOCUMENT = "ocrdocument";
     public final static String RECOGNIZE_BARCODES = "recognizebarcodes";
@@ -49,6 +53,8 @@ public class HODApps {
     public final static String PREDICT = "predict";
     public final static String RECOMMEND = "recommend";
     public final static String TRAIN_PREDICTOR = "trainpredictor";
+    public final static String DELETE_PREDICTION_MODEL = "deletepredictionmodel";
+    public final static String GET_PREDICTION_MODEL_DETAILS = "getpredictionmodeldetails";
 
     public final static String CREATE_QUERY_PROFILE = "createqueryprofile";
     public final static String DELETE_QUERY_PROFILE = "deletequeryprofile";
@@ -71,6 +77,7 @@ public class HODApps {
     public final static String HIGHLIGHT_TEXT = "highlighttext";
     public final static String IDENTIFY_LANGUAGE = "identifylanguage";
     public final static String ANALYZE_SENTIMENT = "analyzesentiment";
+    public final static String GET_TEXT_STATISTICS = "gettextstatistics";
     public final static String TOKENIZE_TEXT = "tokenizetext";
 
     public final static String ADD_TO_TEXT_INDEX = "addtotextindex";
