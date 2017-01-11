@@ -160,6 +160,44 @@ params.put("mode", "document_photo");
 hodClient.PostRequest(params, hodApp, true);
 ```
 
+**Function GetRequestCombination**
+
+Sends a HTTP GET request to call a combination API.
+```
+GetRequestCombination(Map<String,Object> params, String hodApp, Boolean async)
+```
+* `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand combination API, where the keys are the parameters of that API.
+* `hodApp` a string to identify a Haven OnDemand combination API.
+* `async` specifies API call as Asynchronous or Synchronous.
+
+*Example code:*
+``` 
+// Call a combination named "ocrtoconcept", which recognizes text from an image and extract the concept of the text.
+params.put("url", "http://www.some.domain/review.jpg");
+params.put("languages", "en");
+hodClient.GetRequestCombination(params, "ocrtoconcept", false);
+```
+
+**Function PostRequestCombination**
+
+Sends a HTTP POST request to call a combination API.
+```
+PostRequestCombination(Map<String,Object> params, String hodApp, Boolean async)
+```
+* `params` a HashMap object containing key/value pair parameters to be sent to a Haven OnDemand combination API, where the keys are the parameters of that API.
+* `hodApp` a string to identify a Haven OnDemand combination API.
+* `async` specifies API call as Asynchronous or Synchronous.
+
+*Example code:*
+``` 
+// Call a combination named "imagetosentiment", which recognizes text from an image and analyze the sentiment of the text.
+Map<String,Object> params =  new HashMap<>();
+Map<String,String> file = new HashMap<>();
+file.put("imageFile", "Image/FullPath/AndName/image.jpg");
+params.put("file", file);
+hodClient.PostRequestCombination(params, "imagetosentiment", true);
+```
+
 **Function GetJobResult**
 
 Sends a request to Haven OnDemand to retrieve content identified by the jobID.
@@ -289,7 +327,7 @@ public class MyActivity extends Activity
 {
     HODResponseParser hodParser = new HODResponseParser();
 }
-
+```
 
 **Function ParseJobID**
 
@@ -394,16 +432,15 @@ String ParseJobID(String response)
 ----
 **Function ParseCustomResponse**
 
-    Object ParseCustomResponse(Class<?> T, String jsonStr)
-
-*Description:*
- 
-* Parses a json string and returns a custom object type based on the T class.
+Parses a json string and returns a custom object type based on the T class.
+```
+Object ParseCustomResponse(Class<?> T, String jsonStr)
+```
 
 *Parameters:*
 
-* \<T\>: a custom class object.
-* jsonStr: a json string returned from a synchronous API call or from the GetJobResult() or GetJobStatus() function.
+* `\<T\>` a custom class object.
+* `jsonStr` a json string returned from a synchronous API call or from the GetJobResult() or GetJobStatus() function.
 
 *Return value:*
 
@@ -453,25 +490,20 @@ String ParseJobID(String response)
             }
         }
     }
-----
+
+
 **Function GetLastError**
 
-    List<HODErrorObject> GetLastError()
-
-*Description:*
- 
-* Get the latest error(s) if any happened during parsing the json string or HOD error returned from HOD server. > Note: The job "queued" or "in progress" status is also considered as an error situation. See the example below for how to detect and handle error status. 
-
-*Parameters:*
-
-* None.
+Get the latest error(s) if any happened during parsing the json string or HOD error returned from HOD server. > Note: The job "queued" or "in progress" status is also considered as an error situation. See the example below for how to detect and handle error status.
+```
+List<HODErrorObject> GetLastError()
+```
 
 *Return value:*
 
 * An list object contains HODErrorObject
 
 *Example code:*
-
 ```
 List<HODErrorObject> errors = parser.GetLastError();
 String errorMsg = "";
@@ -496,188 +528,168 @@ for (HODErrorObject err : errors) {
 
 **Call the Entity Extraction API to extract people and places from cnn.com website with a synchronous GET request**
 
-    import com.hod.api.hodclient.IHODClientCallback;
-    import com.hod.api.hodclient.HODApps;
-    import com.hod.api.hodclient.HODClient;
-    import hod.response.parser.HODErrorCode;
-    import hod.response.parser.HODErrorObject;
-    import hod.response.parser.HODResponseParser;
+```
+import com.hod.api.hodclient.IHODClientCallback;
+import com.hod.api.hodclient.HODApps;
+import com.hod.api.hodclient.HODClient;
+import hod.response.parser.HODErrorCode;
+import hod.response.parser.HODErrorObject;
+import hod.response.parser.HODResponseParser;
     
-    public class MyActivity extends Activity implements IHODClientCallback {
+public class MyActivity extends Activity implements IHODClientCallback {
 
-        HODClient hodClient;
-	    HODResponseParser hodParser;
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    HODClient hodClient;
+    HODResponseParser hodParser;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
             
-            hodClient = new HODClient("your-apikey", this);
-            hodParser = new HODResponseParser();
+        hodClient = new HODClient("your-apikey", this);
+        hodParser = new HODResponseParser();
             
-            useHODClient();
-        }
-
-        private void useHODClient() {
-            String hodApp = HODApps.ENTITY_EXTRACTION;
-            params.put("url", "http://www.cnn.com");
-            List<String> entities = new ArrayList<String>();
-            entities.add("people_eng");
-            entities.add("places_eng");
-            params.put("entity_type", entities);
-            params.put("unique_entities", "true");
-            
-            hodClient.GetRequest(params, hodApp, HODClient.REQ_MODE.SYNC);
-        }
-        
-        // define a custom response class
-        public class EntityExtractionResponse {
-            public List<Entity> entities;
-
-            public class AdditionalInformation
-            {
-                public List<String> person_profession;
-                public String person_date_of_birth;
-                public String wikipedia_eng;
-                public Long place_population;
-                public String place_country_code;
-                public Double place_elevation; 
-            }
-            public class Entity
-            {
-                public String normalized_text;
-                public String type;
-                public AdditionalInformation additional_information;
-            }
-        }
-        
-        // implement callback functions
-        @Override
-        public void requestCompletedWithContent(String response) { 
-            EntityExtractionResponse resp = (EntityExtractionResponse) hodParser.ParseCustomResponse(EntityExtractionResponse.class, response);
-            if (resp != null) {
-                String values = "";
-                for (EntityExtractionResponse.Entity ent : resp.entities) {
-                    values += ent.type + "\n";
-                    values += ent.normalized_text + "\n";
-                    if (ent.type.equals("places_eng")) {
-                        values += ent.additional_information.place_country_code + "\n";
-                        values += ent.additional_information.place_elevation + "\n";
-                        values += ent.additional_information.place_population + "\n";
-                    } else if (ent.type.equals("people_eng")) {
-                        values += ent.additional_information.person_date_of_birth + "\n";
-                        values += ent.additional_information.person_profession + "\n";
-                        values += ent.additional_information.wikipedia_eng + "\n";
-                    }
-                }
-                // print the values
-            } else {
-                List<HODErrorObject> errors = parser.GetLastError();
-                String errorMsg = "";
-                for (HODErrorObject err : errors) {
-                    errorMsg += String.format("Error code: %d\nError Reason: %s\n", err.error, err.reason);
-                    if (err.detail != null)
-                        errorMsg += "Error detail: " + err.detail + "\n";
-                    // handle error message
-                }
-            }	
-        }
-        
-        @Override
-        public void onErrorOccurred(String errorMessage) { 
-            // handle error if any
-        }
+        useHODClient();
     }
 
-----
+    private void useHODClient() {
+        String hodApp = HODApps.ENTITY_EXTRACTION;
+        params.put("url", "http://www.cnn.com");
+        List<String> entities = new ArrayList<String>();
+        entities.add("people_eng");
+        entities.add("places_eng");
+        params.put("entity_type", entities);
+        params.put("unique_entities", "true");
+            
+        hodClient.GetRequest(params, hodApp, false);
+    }
+    
+    // implement callback functions
+    @Override
+    public void requestCompletedWithContent(String response) { 
+        EntityExtractionResponse resp = hodParser.ParseCustomResponse(response);
+        if (resp != null) {
+            String values = "";
+            for (EntityExtractionResponse.Entity ent : resp.entities) {
+                values += ent.type + "\n";
+                values += ent.normalized_text + "\n";
+                if (ent.type.equals("places_eng")) {
+                    values += ent.additional_information.place_country_code + "\n";
+                    values += ent.additional_information.place_elevation + "\n";
+                    values += ent.additional_information.place_population + "\n";
+                } else if (ent.type.equals("people_eng")) {
+                    values += ent.additional_information.person_date_of_birth + "\n";
+                    values += ent.additional_information.person_profession + "\n";
+                    values += ent.additional_information.wikipedia_eng + "\n";
+                }
+            }
+            // print the values
+        } else {
+            List<HODErrorObject> errors = parser.GetLastError();
+            String errorMsg = "";
+            for (HODErrorObject err : errors) {
+                errorMsg += String.format("Error code: %d\nError Reason: %s\n", err.error, err.reason);
+                if (err.detail != null)
+                    errorMsg += "Error detail: " + err.detail + "\n";
+                // handle error message
+            }
+        }	
+    }
+        
+    @Override
+    public void onErrorOccurred(String errorMessage) { 
+        // handle error if any
+    }
+}
+```
 
 ## Demo code 2:
  
 **Call the OCR Document API to recognize text from an image with an asynchronous POST request**
 
-    import com.hod.api.hodclient.IHODClientCallback;
-    import com.hod.api.hodclient.HODApps;
-    import com.hod.api.hodclient.HODClient;
-    import hod.response.parser.HODErrorCode;
-    import hod.response.parser.HODErrorObject;
-    import hod.response.parser.HODResponseParser;
-    import hod.response.parser.OCRDocumentResponse;
+```
+import com.hod.api.hodclient.IHODClientCallback;
+import com.hod.api.hodclient.HODApps;
+import com.hod.api.hodclient.HODClient;
+import hod.response.parser.HODErrorCode;
+import hod.response.parser.HODErrorObject;
+import hod.response.parser.HODResponseParser;
+import hod.response.parser.OCRDocumentResponse;
     
-    public class MyActivity extends Activity implements IHODClientCallback {
+public class MyActivity extends Activity implements IHODClientCallback {
 
-        HODClient hodClient;
-	    HODResponseParser hodParser;
-	    String hodApp = "";
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    HODClient hodClient;
+    HODResponseParser hodParser;
+    String hodApp = "";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
             
-            hodClient = new HODClient("your-apikey", this);
-            hodParser = new HODResponseParser();    
-            useHODClient();
-        }
-
-        private void useHODClient() {
-            hodApp = HODApps.OCR_DOCUMENT;
-            Map<String, Object> params = new HashMap<String, Object>();
+        hodClient = new HODClient("your-apikey", this);
+        hodParser = new HODResponseParser();    
+        useHODClient();
+    }
+    
+    private void useHODClient() {
+        hodApp = HODApps.OCR_DOCUMENT;
+        Map<String, Object> params = new HashMap<String, Object>();
             
-            params.put("file", "path/and/filename");
-            params.put("mode", "document_photo");
-
-            hodClient.PostRequest(params, hodApp, true);
-        }
+        params.put("file", "path/and/filename");
+        params.put("mode", "document_photo");
+    
+        hodClient.PostRequest(params, hodApp, true);
+    }
         
-        // implement delegated functions
+    // implement delegated functions
         
-        /**************************************************************************************
-        * An async request will result in a response with a jobID. We parse the response to get
-        * the jobID and send a request for the actual content identified by the jobID.
-        **************************************************************************************/ 
-        @Override
-        public void requestCompletedWithJobID(String response) { 
-            String jobID = parser.ParseJobID(response);
-            if (jobID.length() > 0)
-                hodClient.GetJobStatus(jobID);
-        }
-
-        @Override
-        public void requestCompletedWithContent(String response) { 
-            OCRDocumentResponse resp = hodParser.ParseOCRDocumentResponse(response);
-            if (resp != null) {
-                String text = "";
-                for (OCRDocumentResponse.TextBlock block : resp.text_block) {
-                    text += block.text + "\n";
+    /**************************************************************************************
+    * An async request will result in a response with a jobID. We parse the response to get
+    * the jobID and send a request for the actual content identified by the jobID.
+    **************************************************************************************/ 
+    @Override
+    public void requestCompletedWithJobID(String response) { 
+        String jobID = parser.ParseJobID(response);
+        if (jobID.length() > 0)
+            hodClient.GetJobStatus(jobID);
+    }
+    
+    @Override
+    public void requestCompletedWithContent(String response) { 
+        OCRDocumentResponse resp = hodParser.ParseOCRDocumentResponse(response);
+        if (resp != null) {
+            String text = "";
+            for (OCRDocumentResponse.TextBlock block : resp.text_block) {
+                text += block.text + "\n";
+            }
+            // print recognized text.
+        } else {
+            List<HODErrorObject> errors = parser.GetLastError();
+            String errorMsg = "";
+            for (HODErrorObject err: errors) {
+                if (err.error == HODErrorCode.QUEUED) {
+                    // sleep for a few seconds then check the job status again
+                    hodClient.GetJobStatus(err.jobID);
+                    return;
+                } else if (err.error == HODErrorCode.IN_PROGRESS) {
+                    // sleep for for a while then check the job status again
+                    hodClient.GetJobStatus(err.jobID);
+                    return;
+                } else {
+                    errorMsg += String.format("Error code: %d\nError Reason: %s\n", err.error, err.reason);
+                    if (err.detail != null)
+                        errorMsg += "Error detail: " + err.detail + "\n";
                 }
-                // print recognized text.
-            } else {
-                List<HODErrorObject> errors = parser.GetLastError();
-                String errorMsg = "";
-                for (HODErrorObject err: errors) {
-                    if (err.error == HODErrorCode.QUEUED) {
-                        // sleep for a few seconds then check the job status again
-                        hodClient.GetJobStatus(err.jobID);
-                        return;
-                    } else if (err.error == HODErrorCode.IN_PROGRESS) {
-                        // sleep for for a while then check the job status again
-                        hodClient.GetJobStatus(err.jobID);
-                        return;
-                    } else {
-                        errorMsg += String.format("Error code: %d\nError Reason: %s\n", err.error, err.reason);
-                        if (err.detail != null)
-                            errorMsg += "Error detail: " + err.detail + "\n";
-                    }
-                    // print error message.
-                }
+                // print error message.
             }
         }
-        
-        @Override
-        public void onErrorOccurred(String errorMessage) { 
-            // handle error if any
-        }
     }
----
+        
+    @Override
+    public void onErrorOccurred(String errorMessage) { 
+        // handle error if any
+    }
+}
+----
 ## Standard response parser functions
 ```
 ParseSpeechRecognitionResponse(String jsonStr)
@@ -706,20 +718,28 @@ ParseRecognizeBarcodesResponse(String jsonStr)
 ParseRecognizeImagesResponse(String jsonStr)
 ParseDetectFacesResponse(String jsonStr)
 ParsePredictResponse(String jsonStr)
+ParsePredictV2Response(String jsonStr)
 ParseRecommendResponse(String jsonStr)
-ParseTrainPredictorResponse(String jsonStr)
+ParseRecommendV2Response(String jsonStr)
+ParseTrainPredictionResponse(String jsonStr)
+ParseTrainPredictionV2Response(String jsonStr)
+ParseTrendAnalysisResponse(String jsonStr)
 ParseCreateQueryProfileResponse(String jsonStr)
 ParseDeleteQueryProfileResponse(String jsonStr)
 ParseRetrieveQueryProfileResponse(String jsonStr)
 ParseUpdateQueryProfileResponse(String jsonStr)
 ParseFindRelatedConceptsResponse(String jsonStr)
 ParseAutoCompleteResponse(String jsonStr)
+ParseAnomalyDetectionResponse(String jsonStr)
+ParseEntityExtractionResponse(String jsonStr)
+ParseEntityExtractionV2Response(String jsonStr)
 ParseExtractConceptsResponse(String jsonStr)
 ParseExpandTermsResponse(String jsonStr)
 ParseHighlightTextResponse(String jsonStr)
 ParseIdentifyLanguageResponse(String jsonStr)
 ParseTokenizeTextResponse(String jsonStr)
 ParseSentimentAnalysisResponse(String jsonStr)
+ParseSentimentAnalysisV2Response(String jsonStr)
 ParseAddToTextIndexResponse(String jsonStr)
 ParseCreateTextIndexResponse(String jsonStr)
 ParseDeleteTextIndexResponse(String jsonStr)
@@ -731,14 +751,14 @@ ParseRestoreTextIndexResponse(String jsonStr)
 ----
 ## Supported standard response classes
 ```
-RecognizeSpeechResponse
-CancelConnectorResponse
+SpeechRecognitionResponse
+CancelConnectorScheduleResponse
 ConnectorHistoryResponse
 ConnectorStatusResponse
 CreateConnectorResponse
 DeleteConnectorResponse
-RetrieveConnectorConfigurationAttributeResponse
 RetrieveConnectorConfigurationFileResponse
+RetrieveConnectorConfigurationAttrResponse
 StartConnectorResponse
 StopConnectorResponse
 UpdateConnectorResponse
@@ -753,24 +773,32 @@ GetSubgraphResponse
 SuggestLinksResponse
 SummarizeGraphResponse
 OCRDocumentResponse
-BarcodeRecognitionResponse
-FaceDetectionResponse
-ImageRecognitionResponse
+RecognizeBarcodesResponse
+RecognizeImagesResponse
+DetectFacesResponse
 PredictResponse
+PredictV2Response
 RecommendResponse
+RecommendV2Response
 TrainPredictionResponse
+TrainPredictionV2Response
+TrendAnalysisResponse
 CreateQueryProfileResponse
 DeleteQueryProfileResponse
 RetrieveQueryProfileResponse
 UpdateQueryProfileResponse
 FindRelatedConceptsResponse
 AutoCompleteResponse
-ConceptExtractionResponse
+AnomalyDetectionResponse
+EntityExtractionResponse
+EntityExtractionV2Response
+ExtractConceptsResponse
 ExpandTermsResponse
 HighlightTextResponse
-LanguageIdentificationResponse
+IdentifyLanguageResponse
+TokenizeTextResponse
 SentimentAnalysisResponse
-TextTokenizationResponse
+SentimentAnalysisV2Response
 AddToTextIndexResponse
 CreateTextIndexResponse
 DeleteTextIndexResponse
