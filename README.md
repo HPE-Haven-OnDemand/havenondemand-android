@@ -814,5 +814,3 @@ RestoreTextIndexResponse
 ---
 ## License
 Licensed under the MIT License.
-
-HODClient library uses the Apache httpmime-4.3.2 and httpcore-4.3.2 libraries. For your convenience, the library project included the httpmime-4.3.2.jar and httpcore-4.3.jar files. The dependent components are licensed under the Apache License 2.0. Please see the files called LICENSE.txt and NOTICE.txt for more information.
